@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# PassCrafter - Random Password Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+**PassCrafter** is a modern, user-friendly random password generator designed to help users create secure passwords. With customizable options including length, uppercase letters, lowercase letters, numbers, and symbols, PassCrafter ensures you have strong passwords tailored to your needs.
 
-In the project directory, you can run:
+## Features
 
-### `yarn start`
+- **Customizable Length**: Adjust the length of your password from 4 to 20 characters.
+- **Include Uppercase Letters**: Toggle to include uppercase letters in your password.
+- **Include Lowercase Letters**: Toggle to include lowercase letters in your password.
+- **Include Numbers**: Toggle to include numbers in your password.
+- **Include Symbols**: Toggle to include special symbols in your password.
+- **Copy to Clipboard**: Easily copy your generated password to the clipboard with a single click.
+- **Automatic Generation**: Passwords are automatically regenerated when toggles are changed.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To get started with PassCrafter, follow these steps:
 
-### `yarn test`
+1. **Clone the Repository**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```bash
+   git clone https://github.com/chhedadhruv/passcrafter-password-generator.git
+    ```
 
-### `yarn build`
+2. **Navigate to the Directory**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   cd passcrafter-password-generator
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Install Dependencies**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```bash
+   yarn install
+   ```
 
-### `yarn eject`
+4. **Start the Development Server**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ```bash
+    yarn start
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Adjust Password Length**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   Use the slider to adjust the length of your password. The length can be set from 4 to 20 characters.
 
-## Learn More
+2. **Customize Password**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   Toggle the switches to include uppercase letters, lowercase letters, numbers, and symbols in your password.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. **Generate Password**
 
-### Code Splitting
+   Click the "Generate Password" button to create a new password based on your preferences.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. **Copy Password**
 
-### Analyzing the Bundle Size
+   Click the "Copy to Clipboard" button to copy the generated password to your clipboard.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+5. **Automatic Generation**
 
-### Making a Progressive Web App
+   Passwords are automatically regenerated when toggles are changed.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Technologies
 
-### Advanced Configuration
+- **React**: JavaScript library for building user interfaces.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contact
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For any questions or feedback, feel free to reach out to me at [me@dhruvchheda.com](mailto:me@dhruvchheda.com).
