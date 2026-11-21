@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE } from "../lib/site";
 import { TOOLS } from "../lib/tools";
+import { guidesForTool } from "../lib/guides";
 import ToolIcon from "./ToolIcon";
 import { Accordion, Container, Eyebrow, PageHero, Prose } from "./ui";
 
@@ -72,6 +73,26 @@ export default function ToolPage({ path, name, intro, faqs = [], children, about
             </div>
           </Container>
         </section>
+      )}
+
+      {guidesForTool(path).length > 0 && (
+        <Container className="pt-16">
+          <Eyebrow>Learn more</Eyebrow>
+          <h2 className="mb-8 text-3xl">Related guides</h2>
+          <ul className="grid gap-4 md:grid-cols-2">
+            {guidesForTool(path).map((g) => (
+              <li key={g.slug}>
+                <Link
+                  href={`/guides/${g.slug}/`}
+                  className="card block h-full p-5 transition hover:-translate-y-0.5 hover:border-primary/40"
+                >
+                  <span className="block font-heading text-lg font-bold">{g.title}</span>
+                  <span className="mt-1 block text-sm text-text-secondary">{g.description}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Container>
       )}
 
       <Container className="py-16">

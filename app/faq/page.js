@@ -43,6 +43,10 @@ const GROUPS = [
         a: "Your browser hashes the password with SHA-1 and sends only the first five characters of the hash to the Have I Been Pwned API. The matching happens in your browser, so the password and full hash never leave your device.",
       },
       {
+        q: "Does PassCrafter work offline?",
+        a: "Yes. After your first visit, the generators, strength checker, hash tool and vault work without a connection, and you can install the site as an app from your browser. The breach checker is the exception because it has to look up the Have I Been Pwned database online.",
+      },
+      {
         q: "Does PassCrafter use cookies or analytics?",
         a: "No. The only thing saved in your browser besides the vault is your light or dark theme preference. See the privacy policy for details.",
       },

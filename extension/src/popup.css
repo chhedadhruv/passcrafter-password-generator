@@ -1,0 +1,16 @@
+/* Shared design tokens and component classes (.card, .btn-primary, ...) from the website. */
+@import "../../app/globals.css";
+
+/* No web fonts in the extension: use the system UI stack. */
+:root {
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font-body);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html,
+body {
+  width: 420px;
+  min-height: 560px;
+  margin: 0;
+}

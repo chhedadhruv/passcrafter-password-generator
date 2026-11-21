@@ -31,7 +31,10 @@ function ErrorText({ children }) {
   );
 }
 
-export default function VaultApp() {
+// consumeSignal: increment to tell an already-unlocked vault to pick up a password stashed by
+//   the generator (used by the extension popup, where both live on one page).
+// autoClearClipboard: set false where timers can't be trusted to run (a popup closes).
+export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true } = {}) {
   const storageRef = useRef(null);
   const sessionRef = useRef(null);
   const clipboardToken = useRef(0);
@@ -71,12 +74,8 @@ export default function VaultApp() {
     setPhase("locked");
   }, []);
 
-  async function enter(session) {
-    sessionRef.current = session;
-    await refresh();
-    setNotice("");
-    setPhase("ready");
-    // A password handed over from the generator ("Save to vault") opens the add form.
+  // A password handed over from the generator ("Save to vault") opens the add form.
+  function consumePending() {
     try {
       const pending = sessionStorage.getItem(PENDING_KEY);
       if (pending) {
@@ -86,6 +85,19 @@ export default function VaultApp() {
       }
     } catch {}
   }
+
+  async function enter(session) {
+    sessionRef.current = session;
+    await refresh();
+    setNotice("");
+    setPhase("ready");
+    consumePending();
+  }
+
+  useEffect(() => {
+    if (phase === "ready" && consumeSignal > 0) consumePending();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [consumeSignal]);
 
   // Auto-lock after inactivity.
   useEffect(() => {
@@ -107,6 +119,10 @@ export default function VaultApp() {
   async function copyPassword(text) {
     try {
       await navigator.clipboard.writeText(text);
+      if (!autoClearClipboard) {
+        setNotice("Copied. Clear your clipboard when you're done.");
+        return;
+      }
       const token = ++clipboardToken.current;
       setNotice("Copied. The clipboard will be cleared in 30 seconds.");
       setTimeout(() => {

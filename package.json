@@ -12,12 +12,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "npx serve out",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:extension": "vite build --config extension/vite.config.js",
+    "package:extension": "yarn build:extension && cd extension/dist && zip -qr ../passcrafter-extension.zip ."
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.10",
+    "vite": "5",
     "vitest": "2"
   }
 }

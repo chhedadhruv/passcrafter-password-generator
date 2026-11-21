@@ -21,7 +21,9 @@ const OPTIONS = [
 
 const LEVEL_COLOR = ["", "bg-danger", "bg-amber-500", "bg-success", "bg-primary"];
 
-export default function PasswordGenerator() {
+// `onSaveToVault(password)` lets a host (the Chrome extension popup) handle "Save to vault"
+// itself. Without it, the password is handed to the /vault/ page.
+export default function PasswordGenerator({ onSaveToVault } = {}) {
   const [opts, setOpts] = useState({
     length: 16,
     lowercase: true,
@@ -54,7 +56,8 @@ export default function PasswordGenerator() {
 
   function saveToVault() {
     if (stashPendingPassword(password)) {
-      window.location.assign("/vault/");
+      if (onSaveToVault) onSaveToVault(password);
+      else window.location.assign("/vault/");
     } else {
       setStatus("Couldn't hand the password to the vault. Copy it and add it there instead.");
     }

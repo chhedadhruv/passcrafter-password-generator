@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Figtree, JetBrains_Mono } from "next/font/google";
 import { SITE } from "../lib/site";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import RegisterSW from "../components/RegisterSW";
 
 // next/font self-hosts these at build time: no runtime requests to Google.
 const heading = Bricolage_Grotesque({ subsets: ["latin"], display: "swap", variable: "--font-heading" });
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        <RegisterSW />
       </body>
     </html>
   );

@@ -33,7 +33,17 @@ yarn install
 yarn dev      # http://localhost:3000
 yarn test     # unit tests (vitest)
 yarn build    # static export to ./out
+yarn build:extension    # Chrome extension popup to ./extension/dist
 ```
+
+Don't run `yarn build` or install packages while `yarn dev` is running: they share the `.next`
+folder and can corrupt its cache (symptom: pages return 500 and look unstyled). Stop the dev server,
+or delete `.next`, first.
+
+### Offline
+
+The site registers a service worker in production builds that caches every page and asset after the
+first visit. Everything works offline except the breach checker, which needs the network.
 
 ## Tech
 
@@ -47,8 +57,9 @@ yarn build    # static export to ./out
 1. ✅ Next.js migration, crypto-secure generator, sitemap/robots, valid JSON-LD
 2. ✅ More tools: passphrase generator, strength checker, PIN, username, hash, breach checker
 3. ✅ Encrypted local vault with encrypted-backup and CSV import/export
-4. Chrome extension (Manifest V3)
-5. Guides, PWA/offline support, further design polish
+4. ✅ Chrome extension (Manifest V3), see [`extension/`](extension/README.md)
+5. ✅ Guides (`/guides/`) and PWA/offline support (service worker in `public/sw.js`)
+6. Deployment on Vercel, Web Store submission, Lighthouse pass, OG share image
 
 ## Contact
 

@@ -242,6 +242,9 @@ export default function Home() {
                 Wondering about an old password? Use the <Link href="/breach-checker/">breach checker</Link>{" "}
                 and <Link href="/password-strength-checker/">strength checker</Link>.
               </li>
+              <li>
+                Learn more in our <Link href="/guides/">password security guides</Link>.
+              </li>
             </ul>
           </Prose>
         </Container>

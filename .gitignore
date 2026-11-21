@@ -1,5 +1,8 @@
 /node_modules
 /.next
+/.next-*
+/extension/dist
+/extension/*.zip
 /out
 /coverage
 .DS_Store

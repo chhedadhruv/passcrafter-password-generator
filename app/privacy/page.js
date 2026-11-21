@@ -54,6 +54,15 @@ export default function PrivacyPage() {
             and browser details; see their privacy policy for how they handle that.
           </p>
 
+          <h2>The browser extension</h2>
+          <p>
+            The PassCrafter browser extension works the same way as the website. It generates passwords and
+            keeps an encrypted vault entirely on your device, in the extension&apos;s own local storage. It
+            requests only the permission to write to your clipboard, has no access to the pages you visit,
+            and makes no network requests. Its vault is separate from the website&apos;s vault, and your master
+            password is never stored or transmitted.
+          </p>
+
           <h2>What we don&apos;t do</h2>
           <ul>
             <li>No accounts or sign-ups.</li>

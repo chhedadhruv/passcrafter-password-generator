@@ -10,6 +10,7 @@ import ThemeToggle from "./ThemeToggle";
 import ToolIcon from "./ToolIcon";
 
 const LINKS = [
+  { href: "/guides/", label: "Guides" },
   { href: "/faq/", label: "FAQ" },
   { href: "/about/", label: "About" },
 ];
