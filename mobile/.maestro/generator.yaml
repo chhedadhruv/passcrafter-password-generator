@@ -1,0 +1,46 @@
+appId: com.passcrafter
+name: Generator and tab navigation
+---
+# Debug builds load JS from Metro (adb reverse tcp:8081 tcp:8081, `npx expo start --dev-client`).
+# Tabs are targeted by id because debug builds float a developer "Tools" button over the app.
+- openLink: "exp+passcrafter://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- extendedWaitUntil:
+    visible: "Generate"
+    timeout: 30000
+# The dev client shows a one-time developer-menu welcome sheet; dismiss it if it appears.
+- tapOn:
+    text: "Continue"
+    optional: true
+# The app keeps its last tab between launches, so start from the Generate tab.
+- tapOn:
+    id: "tab-index"
+- assertVisible: "Password generator"
+- assertVisible: "Very strong.*"
+- assertVisible: "Characters"
+
+# Options and regenerate
+- tapOn: "Symbols"
+- tapOn: "Regenerate"
+- assertVisible: "Very strong.*"
+- takeScreenshot: generator
+
+# Tabs
+- tapOn:
+    id: "tab-tools"
+- assertVisible: "Security tools"
+- assertVisible: "Breach checker"
+- takeScreenshot: tools
+- tapOn:
+    id: "tab-vault"
+- assertVisible: "Vault coming next"
+- tapOn:
+    id: "tab-settings"
+- assertVisible: "Preferences"
+- tapOn:
+    id: "tab-index"
+- assertVisible: "Password generator"
+
+# Copy last: Android 13+ shows its own clipboard preview over the bottom of the screen for a few
+# seconds, which would intercept taps on the tab bar.
+- tapOn: "Copy"
+- assertVisible: "Copied"

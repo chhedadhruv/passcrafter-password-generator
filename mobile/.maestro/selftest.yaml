@@ -1,0 +1,19 @@
+appId: com.passcrafter
+name: Shared vault code self-test
+---
+# Runs the on-device checks of the shared lib (crypto, vault, CSV, generator) on the hidden /selftest route.
+- openLink: "exp+passcrafter://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- extendedWaitUntil:
+    visible: "Generate"
+    timeout: 30000
+- tapOn:
+    text: "Continue"
+    optional: true
+- openLink: "passcrafter:///selftest"
+- extendedWaitUntil:
+    visible: "10/10 passed"
+    timeout: 20000
+- assertVisible: "AES-GCM round trip with AAD; rejects wrong key, wrong AAD, tampering"
+- assertVisible: "Vault: encrypted backup round trip across vaults"
+- assertNotVisible: "FAIL"
+- takeScreenshot: selftest-pass
