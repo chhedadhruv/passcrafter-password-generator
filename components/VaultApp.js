@@ -133,7 +133,8 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
     }
   }
 
-  if (phase === "loading") return <p className="text-text-secondary">Loading…</p>;
+  // Reserve roughly the height of the create/unlock form so the page below doesn't jump.
+  if (phase === "loading") return <p className="min-h-[30rem] text-text-secondary">Loading…</p>;
   if (phase === "unsupported") {
     return (
       <p role="alert" className="card p-5 text-danger">

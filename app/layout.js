@@ -26,13 +26,13 @@ export const metadata = {
     title: `${SITE.name} - ${SITE.tagline}`,
     description: SITE.description,
     url: SITE.url,
-    images: [{ url: "/logo512.png", width: 512, height: 512 }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${SITE.name}: ${SITE.tagline}` }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${SITE.name} - ${SITE.tagline}`,
     description: SITE.description,
-    images: ["/logo512.png"],
+    images: ["/og.png"],
   },
   manifest: "/manifest.json",
   icons: {
