@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens are RGB triplets so Tailwind can apply opacity (bg-primary/20). */
+:root {
+  --bg: 245 248 247;
+  --surface: 255 255 255;
+  --surface-muted: 231 241 239;
+  --border: 221 231 229;
+  --text: 20 36 35;
+  --text-secondary: 85 104 102;
+  --primary: 15 118 110;
+  --primary-text: 15 118 110;
+  --on-primary: 255 255 255;
+  --danger: 200 38 38;
+  --success: 21 128 61;
+  --shadow: 16 52 48;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: 11 18 18;
+  --surface: 20 30 30;
+  --surface-muted: 28 42 41;
+  --border: 40 56 54;
+  --text: 232 240 239;
+  --text-secondary: 156 175 172;
+  --primary: 45 212 191;
+  --primary-text: 94 234 212;
+  --on-primary: 4 32 29;
+  --danger: 248 113 113;
+  --success: 74 222 128;
+  --shadow: 0 0 0;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: 11 18 18;
+    --surface: 20 30 30;
+    --surface-muted: 28 42 41;
+    --border: 40 56 54;
+    --text: 232 240 239;
+    --text-secondary: 156 175 172;
+    --primary: 45 212 191;
+    --primary-text: 94 234 212;
+    --on-primary: 4 32 29;
+    --danger: 248 113 113;
+    --success: 74 222 128;
+    --shadow: 0 0 0;
+    color-scheme: dark;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply overflow-x-clip bg-bg font-sans text-text antialiased;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-heading font-bold tracking-tight;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--primary-text));
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-border bg-surface shadow-card;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-border bg-bg px-3.5 py-2.5 text-text placeholder:text-text-secondary/70;
+  }
+  .field:focus-visible {
+    outline-offset: 1px;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-on-primary hover:opacity-90;
+  }
+  .btn-outline {
+    @apply btn border border-border bg-surface text-text hover:bg-surface-muted;
+  }
+  .btn-danger {
+    @apply btn border border-danger text-danger hover:bg-danger/10;
+  }
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-xs;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-xs font-bold text-text-secondary;
+  }
+
+  .check {
+    @apply h-4 w-4 shrink-0 accent-primary;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

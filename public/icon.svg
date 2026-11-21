@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="PassCrafter">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M256 92 L408 148 V258 C408 346 346 408 256 440 C166 408 104 346 104 258 V148 Z" fill="#ffffff"/>
+  <circle cx="256" cy="228" r="40" fill="#0f766e"/>
+  <path d="M238 262 H274 L288 340 H224 Z" fill="#0f766e"/>
+</svg>

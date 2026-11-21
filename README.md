@@ -1,74 +1,55 @@
-# PassCrafter - Random Password Generator
+# PassCrafter - Free Secure Password Generator
 
-## Overview
-
-**PassCrafter** is a modern, user-friendly random password generator designed to help users create secure passwords. With customizable options including length, uppercase letters, lowercase letters, numbers, and symbols, PassCrafter ensures you have strong passwords tailored to your needs.
+**PassCrafter** generates strong random passwords entirely in your browser using the Web Crypto API (`crypto.getRandomValues`). Nothing is sent to or stored on a server.
 
 ## Features
 
-- **Customizable Length**: Adjust the length of your password from 4 to 20 characters.
-- **Include Uppercase Letters**: Toggle to include uppercase letters in your password.
-- **Include Lowercase Letters**: Toggle to include lowercase letters in your password.
-- **Include Numbers**: Toggle to include numbers in your password.
-- **Include Symbols**: Toggle to include special symbols in your password.
-- **Copy to Clipboard**: Easily copy your generated password to the clipboard with a single click.
-- **Automatic Generation**: Passwords are automatically regenerated when toggles are changed.
+- **Length 8-128** with a slider
+- **Character sets**: lowercase, uppercase, numbers, symbols, plus an option to avoid look-alike characters (`0 O 1 l I`)
+- **Guaranteed coverage**: every enabled set appears at least once
+- **Strength meter** based on entropy (bits)
+- **Copy to clipboard** with inline, screen-reader friendly feedback
+- **Light/dark theme**, saved per browser
 
-## Installation
+### More tools
 
-To get started with PassCrafter, follow these steps:
+Passphrase generator (EFF wordlist), password strength checker, breach checker (Have I Been Pwned k-anonymity: only a 5-character hash prefix leaves the browser), PIN generator, username generator, and SHA hash generator. Each has its own page with metadata, FAQ and JSON-LD.
 
-1. **Clone the Repository**
+### Encrypted vault (`/vault`)
 
-   ```bash
-   git clone https://github.com/chhedadhruv/passcrafter-password-generator.git
-    ```
+- Local only: entries live in your browser's IndexedDB. No account, no server.
+- AES-256-GCM per entry; key derived from your master password with PBKDF2-SHA256 (600,000 iterations), held in memory only
+- Auto-locks after 5 minutes idle; copied passwords are cleared from the clipboard after 30 seconds
+- Encrypted JSON backup export/import (merges by entry, keeps the newer)
+- CSV import/export compatible with Chrome, Bitwarden and 1Password. CSV export is plain text and warns first. Spreadsheet formula injection is guarded in text columns; the password column is written exactly as stored.
+- A forgotten master password cannot be recovered.
 
-2. **Navigate to the Directory**
+See the roadmap below for what is coming next.
 
-   ```bash
-   cd passcrafter-password-generator
-   ```
+## Development
 
-3. **Install Dependencies**
+```bash
+yarn install
+yarn dev      # http://localhost:3000
+yarn test     # unit tests (vitest)
+yarn build    # static export to ./out
+```
 
-   ```bash
-   yarn install
-   ```
+## Tech
 
-4. **Start the Development Server**
+- **Next.js 14** (App Router, static export) for per-page metadata, sitemap and prerendered HTML
+- **Tailwind CSS 3**
+- **Vitest** for unit tests
+- Hosted on **Vercel**
 
-   ```bash
-    yarn start
-    ```
+## Roadmap
 
-## Usage
-
-1. **Adjust Password Length**
-
-   Use the slider to adjust the length of your password. The length can be set from 4 to 20 characters.
-
-2. **Customize Password**
-
-   Toggle the switches to include uppercase letters, lowercase letters, numbers, and symbols in your password.
-
-3. **Generate Password**
-
-   Click the "Generate Password" button to create a new password based on your preferences.
-
-4. **Copy Password**
-
-   Click the "Copy to Clipboard" button to copy the generated password to your clipboard.
-
-5. **Automatic Generation**
-
-   Passwords are automatically regenerated when toggles are changed.
-
-## Technologies
-
-- **React**: JavaScript library for building user interfaces.
-- **Tailwind CSS**: Utility-first CSS framework for styling.
+1. ✅ Next.js migration, crypto-secure generator, sitemap/robots, valid JSON-LD
+2. ✅ More tools: passphrase generator, strength checker, PIN, username, hash, breach checker
+3. ✅ Encrypted local vault with encrypted-backup and CSV import/export
+4. Chrome extension (Manifest V3)
+5. Guides, PWA/offline support, further design polish
 
 ## Contact
 
-For any questions or feedback, feel free to reach out to me at [me@dhruvchheda.com](mailto:me@dhruvchheda.com).
+For questions or feedback, email [me@dhruvchheda.com](mailto:me@dhruvchheda.com).
