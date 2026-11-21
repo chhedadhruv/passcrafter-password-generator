@@ -1,0 +1,14 @@
+appId: com.passcrafter
+name: Shared vault code self-test
+---
+# Fresh launch: runs the on-device checks of the shared lib (crypto, vault, CSV, generator).
+- launchApp:
+    clearState: true
+- assertVisible: "PassCrafter self-test"
+- extendedWaitUntil:
+    visible: "10/10 passed"
+    timeout: 20000
+- assertVisible: "AES-GCM round trip with AAD; rejects wrong key, wrong AAD, tampering"
+- assertVisible: "Vault: encrypted backup round trip across vaults"
+- assertNotVisible: "FAIL"
+- takeScreenshot: selftest-pass
