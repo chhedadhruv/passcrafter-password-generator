@@ -17,6 +17,7 @@ module.exports = {
         "primary-text": token("primary-text"),
         "on-primary": token("on-primary"),
         danger: token("danger"),
+        warning: token("warning"),
         success: token("success"),
       },
       fontFamily: {

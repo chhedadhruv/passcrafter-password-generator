@@ -20,6 +20,7 @@ Passphrase generator (EFF wordlist), password strength checker, breach checker (
 - Local only: entries live in your browser's IndexedDB. No account, no server.
 - AES-256-GCM per entry; key derived from your master password with PBKDF2-SHA256 (600,000 iterations), held in memory only
 - Auto-locks after 5 minutes idle; copied passwords are cleared from the clipboard after 30 seconds
+- Change reminders (opt-in, off by default): see how old each password is, set a default period (3, 6 or 12 months) and override it per entry; due passwords get a badge and a banner. Logic lives in `lib/vault/rotation.js`.
 - Encrypted JSON backup export/import (merges by entry, keeps the newer)
 - CSV import/export compatible with Chrome, Bitwarden and 1Password. CSV export is plain text and warns first. Spreadsheet formula injection is guarded in text columns; the password column is written exactly as stored.
 - A forgotten master password cannot be recovered.

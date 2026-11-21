@@ -39,7 +39,11 @@ export default function PrivacyPage() {
               the master password.
             </li>
             <li>
-              <strong>Your theme choice</strong> (light or dark) is saved in your browser&apos;s local storage.
+              <strong>Your preferences</strong> (light or dark theme, and the default period for
+              password-change reminders) are saved in your browser&apos;s local storage. Reminders are off
+              unless you turn them on. A reminder setting you choose for an individual entry, and the date
+              each password last changed, are stored inside that entry, so they are encrypted with the
+              rest of it and included in your encrypted backups.
             </li>
           </ul>
 

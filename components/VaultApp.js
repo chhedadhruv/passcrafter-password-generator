@@ -1,15 +1,25 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Download, Lock, Plus, Search, ShieldAlert, Upload } from "lucide-react";
+import { BellRing, Download, Lock, Plus, Search, ShieldAlert, Upload } from "lucide-react";
 import { indexedDbStorage } from "../lib/vault/storage";
 import { createVault, unlockVault, vaultExists, MIN_MASTER_LENGTH } from "../lib/vault/vault";
 import { MAX_CSV_BYTES, csvToEntries, entriesToCsv, parseCsv } from "../lib/vault/csv";
 import { estimateStrength } from "../lib/strength";
 import { generatePassword } from "../lib/password";
 import { PENDING_KEY } from "../lib/vault/handoff";
+import {
+  ROTATION_OPTIONS,
+  dueEntries,
+  formatAge,
+  periodLabel,
+  rotationLabel,
+  rotationStatus,
+} from "../lib/vault/rotation";
 
 const IDLE_LOCK_MS = 5 * 60 * 1000;
 const CLIPBOARD_CLEAR_MS = 30 * 1000;
+// Default change-reminder period (days, 0 = off). Kept per browser, outside the encrypted vault.
+const ROTATE_KEY = "passcrafter:rotate-default-days";
 
 function download(filename, text, type) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -46,6 +56,22 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
   const [prefill, setPrefill] = useState("");
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
+  const [rotateDefault, setRotateDefault] = useState(0);
+  const [onlyDue, setOnlyDue] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = Number(localStorage.getItem(ROTATE_KEY));
+      if (Number.isInteger(saved) && saved > 0) setRotateDefault(saved);
+    } catch {}
+  }, []);
+
+  function changeRotateDefault(days) {
+    setRotateDefault(days);
+    try {
+      localStorage.setItem(ROTATE_KEY, String(days));
+    } catch {}
+  }
 
   useEffect(() => {
     (async () => {
@@ -161,9 +187,12 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
   }
 
   const q = query.trim().toLowerCase();
-  const shown = q
+  const dueList = dueEntries(entries, rotateDefault);
+  const dueIds = new Set(dueList.map(({ entry }) => entry.id));
+  let shown = q
     ? entries.filter((e) => [e.label, e.site, e.username].some((v) => v?.toLowerCase().includes(q)))
     : entries;
+  if (onlyDue) shown = shown.filter((e) => dueIds.has(e.id));
 
   return (
     <div>
@@ -210,9 +239,26 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
         </p>
       )}
 
+      {dueList.length > 0 && (
+        <div
+          role="region"
+          aria-label="Password change reminders"
+          className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-danger/40 bg-danger/10 p-3 text-sm"
+        >
+          <span className="flex items-center gap-2 font-bold text-danger">
+            <BellRing size={16} aria-hidden="true" />
+            {dueList.length} {dueList.length === 1 ? "password is" : "passwords are"} due for a change
+          </span>
+          <button type="button" className="btn-outline btn-sm" aria-pressed={onlyDue} onClick={() => setOnlyDue(!onlyDue)}>
+            {onlyDue ? "Show all" : "Show only these"}
+          </button>
+        </div>
+      )}
+
       {editing && (
         <EntryForm
           key={editing === "new" ? "new" : editing.id}
+          defaultDays={rotateDefault}
           entry={editing === "new" ? { password: prefill } : editing}
           isNew={editing === "new"}
           onCancel={() => setEditing(null)}
@@ -237,6 +283,7 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
           <EntryRow
             key={e.id}
             entry={e}
+            defaultDays={rotateDefault}
             onCopy={() => copyPassword(e.password)}
             onEdit={() => setEditing(e)}
             onDelete={async () => {
@@ -247,6 +294,35 @@ export default function VaultApp({ consumeSignal = 0, autoClearClipboard = true 
         ))}
       </ul>
       {q && shown.length === 0 && entries.length > 0 && <p className="text-text-secondary">No matches.</p>}
+
+      <section className="card mt-10 p-5 sm:p-6" aria-label="Change reminders">
+        <h2 className="mb-2 text-2xl">Change reminders</h2>
+        <p className="mb-4 text-sm text-text-secondary">
+          Get a nudge when a password gets old. Reminders are off by default: changing passwords on a
+          fixed schedule can lead to weaker, predictable ones, so they suit important accounts, or any
+          account after a breach. Each entry can override this default.
+        </p>
+        <label htmlFor="rotate-default" className="mb-2 block font-bold">
+          Remind me to change passwords after
+        </label>
+        <select
+          id="rotate-default"
+          className="field max-w-xs"
+          value={rotateDefault}
+          onChange={(e) => changeRotateDefault(Number(e.target.value))}
+        >
+          <option value={0}>Never (off)</option>
+          {ROTATION_OPTIONS.map((o) => (
+            <option key={o.days} value={o.days}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <p className="mt-3 text-xs text-text-secondary">
+          This default is saved in this browser only. Each entry&apos;s own setting travels with your
+          encrypted backups.
+        </p>
+      </section>
 
       <DataTools
         entries={entries}
@@ -384,13 +460,15 @@ function UnlockForm({ onUnlock, onErase, notice }) {
   );
 }
 
-function EntryForm({ entry, isNew, onSave, onCancel }) {
+function EntryForm({ entry, isNew, defaultDays = 0, onSave, onCancel }) {
   const [f, setF] = useState({
     label: entry.label || "",
     site: entry.site || "",
     username: entry.username || "",
     password: entry.password || "",
     notes: entry.notes || "",
+    // "" = use the default, "0" = never remind for this entry, otherwise a number of days.
+    rotate: entry.rotateDays === undefined ? "" : String(entry.rotateDays),
   });
   const [show, setShow] = useState(isNew);
   const [error, setError] = useState("");
@@ -400,7 +478,9 @@ function EntryForm({ entry, isNew, onSave, onCancel }) {
   async function submit(e) {
     e.preventDefault();
     try {
-      await onSave(f);
+      const { rotate, ...fields } = f;
+      // rotateDays: undefined clears an override so the entry follows the default again.
+      await onSave({ ...fields, rotateDays: rotate === "" ? undefined : Number(rotate) });
     } catch (err) {
       setError(err.message || "Couldn't save.");
     }
@@ -443,7 +523,20 @@ function EntryForm({ entry, isNew, onSave, onCancel }) {
         </div>
       </div>
       <label htmlFor="f-notes" className="mb-2 mt-4 block font-bold">Notes</label>
-      <textarea id="f-notes" className="field mb-5 min-h-[5rem]" value={f.notes} onChange={set("notes")} />
+      <textarea id="f-notes" className="field mb-4 min-h-[5rem]" value={f.notes} onChange={set("notes")} />
+      <label htmlFor="f-rotate" className="mb-2 block font-bold">Change reminder</label>
+      <select id="f-rotate" className="field mb-1 max-w-xs" value={f.rotate} onChange={set("rotate")}>
+        <option value="">Use default ({periodLabel(defaultDays)})</option>
+        <option value="0">Never remind for this entry</option>
+        {ROTATION_OPTIONS.map((o) => (
+          <option key={o.days} value={o.days}>
+            Every {o.label}
+          </option>
+        ))}
+      </select>
+      <p className="mb-5 text-xs text-text-secondary">
+        Counted from when the password last changed. Saving a new password restarts the clock.
+      </p>
       <ErrorText>{error}</ErrorText>
       <div className="flex gap-2">
         <button type="submit" className="btn-primary">Save</button>
@@ -453,10 +546,13 @@ function EntryForm({ entry, isNew, onSave, onCancel }) {
   );
 }
 
-function EntryRow({ entry, onCopy, onEdit, onDelete }) {
+function EntryRow({ entry, defaultDays = 0, onCopy, onEdit, onDelete }) {
   const [reveal, setReveal] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const title = entry.label || entry.site || "(untitled)";
+  const status = rotationStatus(entry, defaultDays);
+  const badge = rotationLabel(status);
+  const ageText = `Password changed ${status.ageDays < 1 ? "today" : `${formatAge(status.ageDays)} ago`}`;
   return (
     <li className="card p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -464,6 +560,22 @@ function EntryRow({ entry, onCopy, onEdit, onDelete }) {
           <p className="break-words font-heading text-lg font-bold">{title}</p>
           {entry.site && entry.label && <p className="break-all text-sm text-text-secondary">{entry.site}</p>}
           {entry.username && <p className="break-all text-sm text-text-secondary">{entry.username}</p>}
+          <p className="mt-1 text-xs text-text-secondary">
+            {ageText}
+            {status.period > 0 && ` · reminder every ${periodLabel(status.period).toLowerCase()}`}
+          </p>
+          {badge && (
+            <p
+              className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold ${
+                status.state === "due"
+                  ? "border-danger/40 bg-danger/10 text-danger"
+                  : "border-warning/40 bg-warning/10 text-warning"
+              }`}
+            >
+              <BellRing size={12} aria-hidden="true" />
+              {badge}
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" className="btn-outline btn-sm" aria-pressed={reveal} onClick={() => setReveal(!reveal)}>
