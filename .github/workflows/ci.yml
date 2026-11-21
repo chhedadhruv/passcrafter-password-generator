@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      # Unit tests for the shared logic in lib/ (generator, vault, strength, CSV, reminders).
+      - run: yarn test
+
+      # Production builds of the website (static export) and the Chrome extension.
+      - run: yarn build
+      - run: yarn build:extension
+
+      # Browser tests against the builds: site, offline, reminders and the real extension.
+      - run: npx playwright-core install --with-deps chromium
+      - run: yarn test:e2e
+        env:
+          CI: "true"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-artifacts
+          path: e2e/artifacts
+          if-no-files-found: ignore

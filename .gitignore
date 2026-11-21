@@ -3,6 +3,7 @@
 /.next-*
 /extension/dist
 /extension/*.zip
+/e2e/artifacts
 /out
 /coverage
 .DS_Store

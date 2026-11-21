@@ -41,6 +41,28 @@ Don't run `yarn build` or install packages while `yarn dev` is running: they sha
 folder and can corrupt its cache (symptom: pages return 500 and look unstyled). Stop the dev server,
 or delete `.next`, first.
 
+### Tests
+
+```bash
+yarn test          # unit tests for lib/ (vitest)
+yarn test:all      # unit tests, builds, then the browser suites below
+yarn test:e2e      # browser suites only; needs `yarn build` and `yarn build:extension` first
+node e2e/run.js site reminders    # run chosen suites (site, offline, reminders, extension)
+```
+
+The browser suites (`e2e/`) drive a real Chromium against the built site (served from `out/`) and
+the built extension (`extension/dist`): the generator and every tool, the full vault flow including
+encryption at rest and backup/CSV round trips, change reminders (with a simulated clock), offline
+mode, and the extension loaded as a real unpacked extension.
+
+- An installed Chromium-based browser is used automatically. Set `E2E_BROWSER` to choose one. Branded
+  Google Chrome 137+ ignores `--load-extension`, so for the extension suite use Chromium or Brave.
+- With no browser installed, run `npx playwright-core install chromium` once.
+- Screenshots and other artifacts are written to `e2e/artifacts/` (ignored by git).
+- The breach checker test calls the live Have I Been Pwned API; it also passes on the app's clear
+  error message, so a network failure won't fail the run.
+- `.github/workflows/ci.yml` runs all of this on pushes to `main` and on pull requests.
+
 ### Offline
 
 The site registers a service worker in production builds that caches every page and asset after the
