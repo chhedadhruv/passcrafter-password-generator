@@ -42,5 +42,10 @@ example
 /ios
 /android
 
+# Gradle/CMake build output inside local native modules
+modules/*/android/build/
+modules/*/android/.cxx/
+modules/*/android/.gradle/
+
 # Local assistant tooling config
 .claude/

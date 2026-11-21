@@ -4,8 +4,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { runSelfTests, type TestResult } from '@/utils/self-test';
 
-// Temporary home: runs the shared-code self-tests on the device. Replaced by the real app shell.
-export default function Home() {
+// Hidden developer route (open with passcrafter:///selftest): runs the shared-code checks on-device.
+export default function SelfTest() {
   const theme = useTheme();
   const [results, setResults] = useState<TestResult[] | null>(null);
 
